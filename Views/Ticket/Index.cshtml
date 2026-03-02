@@ -1,0 +1,87 @@
+﻿@model MiAplicacionMVC.Models.TicketViewModel;
+
+<div class="container border rounded p-4 mt-2 shadow">
+<h1>Lista de Ticket</h1>
+
+    <div class="row mb-3">
+        <div class="col">
+            <form method="get" class="row g-3">
+                <div class="col-auto">
+                    <input type="text" name="searchString" value="@Model.SearchString" class="form-control" placeholder="Buscar por nombre..." />
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+                <div class="col-auto">
+                    <label class="col-form-label">Número de Registros a mostrar</label>
+                </div>
+                <div class="col-auto">
+                    <select name="pageSize" class="form-select" onchange="this.form.submit()">
+                        <option value="5" selected="@(Model.PageSize == 5)">5</option>
+                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                        <option value="20" selected="@(Model.PageSize == 20)">20</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-auto">
+            <div class="btn-group" role="group">
+                <a asp-action="Create" class="btn btn-primary">Crear Nuevo Ticket</a>
+                <a asp-action="ExportToPdf" class="btn btn-danger">
+                    <i class="fas fa-file-pdf"></i> Exportar a PDF
+                </a>
+                <a asp-action="ExportToExcel" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </a>
+            </div>
+        </div>
+    </div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Order</th>
+                <th class="text-end">Situation</th>
+                <th class="text-center">Solution</th>
+                <th class="text-end">Fecha</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var ticket in Model.Tickets)
+            {
+                <tr>
+                    <td>@ticket.Order</td>
+                    <td class="text-end">@ticket.Situation.ToString()</td>
+                    <td class="text-center">@ticket.Solution.ToString()</td>
+                    <td class="text-end">@ticket.CreatedAt.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@ticket.Id" class="btn btn-warning">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@ticket.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { searchString = Model.SearchString, pageSize = Model.PageSize, pageNumber = Model.PageNumber - 1 })">Anterior</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { searchString = Model.SearchString, pageSize = Model.PageSize, pageNumber = i })">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { searchString = Model.SearchString, pageSize = Model.PageSize, pageNumber = Model.PageNumber + 1 })">Siguiente</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

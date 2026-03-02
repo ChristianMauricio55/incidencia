@@ -1,0 +1,21 @@
+﻿@model MiAplicacionMVC.Models.Ticket
+
+<h1>Eliminar Ticket</h1>
+<form asp-action="Delete" method="post">
+<p>¿Estás seguro de que deseas eliminar este producto?</p>
+<div>
+    <strong>Nombre:</strong> @Model.Order
+</div>
+<div>
+    <strong>Precio:</strong> @Model.Situation
+</div>
+<div>
+    <strong>Stock:</strong> @Model.Solution
+</div>
+
+   <div>
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+   </div>
+</form>     
